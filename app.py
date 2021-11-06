@@ -29,7 +29,7 @@ class Item(db.Model):
         self.postType = postType
         self.description = description
         self.key=key
-        
+
 class ItemSchema(ma.Schema):
     class Meta:
         fields = ("id", "key", "host", "post", "postType", "description",)
@@ -57,6 +57,18 @@ def get_all_items():
     all_items = Item.query.all()
     return jsonify(items_schema.dump(all_items))
 
+
+# Endpoint for deleting a record
+@app.route("/item/<key>", methods=["DELETE"])
+def guide_delete(key):
+    print(key)
+    query="DELETE FROM item WHERE key= '{0}'".format(key)
+    db.session.execute(query)
+    db.session.commit()
+
+
+    return "successfully deleted"
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
